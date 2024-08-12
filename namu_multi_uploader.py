@@ -78,14 +78,14 @@ data = [
     }
 ]
 
-ID = 'yigunwoo97@gmail.com'
-PW = '503d103H'
+ID = 'yourID'
+PW = 'yourPW'
 
 if __name__ == '__main__':
     
     # Chrome for testing 위치 설정
     options = Options()
-    options.binary_location = '/Users/lkw0127/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
+    options.binary_location = 'your CFT location'
 
     # ChromeDriverManager를 사용하여 ChromeDriver 설치 및 경로 설정
     service = Service(ChromeDriverManager().install())
@@ -110,6 +110,7 @@ if __name__ == '__main__':
 
             # PyAutoGUI를 이용하여 Finder에서 파일 선택
             # 단말마다 좌표가 다르니 적절히 찾을것
+            # coordi_check.py 이용하면 현재 마우스 커서의 위치를 알수 있음
             # 폴더 쇼트컷   : 294 489
             # 검색창 클릭   : 920 257
             # 검색 폴더 선택 : 501 302
@@ -144,7 +145,6 @@ if __name__ == '__main__':
             
             print('done')
             sleep(3)
-            # 우선 계속 대기(1000초 등)로 하고, 파일 하나 검색, 선택하는지 얼마나 걸리는지 확인하기
             
             # 업로드명 입력
             upload_name_input = driver.find_element(By.NAME, "document")
