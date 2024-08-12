@@ -1,12 +1,11 @@
 # 나무위키에 이미지 하나하나 업로드 하는게 너무 힘들다
-# 그걸 Selenium.ChromeDriver을 이용해서 자동화 해본다.
+# 그걸 Selenium.ChromeDriver, pyautogui를 이용해서 자동화 해본다.
 # 이미지업로드에 필요한 정보는
-# 1. 이미지 절대경로
+# 1. 이미지 파일명
 # 2. 나무위키에 업로드될 이미지의 이름
 # 3. 출처 url
 # 4. 라이선스종류(대부분 제한적 이용)
 # 5. 분류
-# 이렇게 다섯가지를 인자로 받는 업로드 함수를 만들어보자
 
 import json
 from selenium import webdriver
@@ -36,8 +35,7 @@ def make_upload_detail(source):
 
 def login_namu(namu_id, namu_pw):     
     # 나무위키 로그인창 열기
-    # redirect가 있어야 캡챠가 뚫리는듯 함(관계 없는듯함)
-    driver.get("https://namu.wiki/member/login?redirect=%2Fw%2F%25EB%2582%2598%25EB%25AC%25B4%25EC%259C%2584%25ED%2582%25A4%3A%25EB%258C%2580%25EB%25AC%25B8")
+    driver.get("https://namu.wiki/member/login")
     sleep(3)
         
     # 사용자 ID 입력
@@ -61,25 +59,9 @@ def login_namu(namu_id, namu_pw):
     # 캡챠 처리 후 다음 단계로 진행
     print("캡챠가 해결되었습니다. 다음 작업을 시작합니다.")
 
-data = [
-    {
-        'file_name' : '썬&문확장팩제4탄「각성의용사」.png',
-        'namu_img_name' : '파일:각성의_용사_kr.png',
-        'source' : 'https://pokemoncard.co.kr/card/116',
-        'license' : '제한적 이용',
-        'category' : '포켓몬 카드 게임'
-    },
-    {
-        'file_name' : '썬&문확장팩제4탄「초차원의침략자」.png',
-        'namu_img_name' : '파일:초차원의_침략자_kr.png',
-        'source' : 'https://pokemoncard.co.kr/card/116',
-        'license' : '제한적 이용',
-        'category' : '포켓몬 카드 게임'
-    }
-]
-
 ID = 'yourID'
 PW = 'yourPW'
+UPLOAD_DATA = 'pathOfYourJson'
 
 if __name__ == '__main__':
     
@@ -95,11 +77,10 @@ if __name__ == '__main__':
         login_namu(ID,PW)
         
         # JSON 파일 로드
-        #with open(json_file_path, 'r') as f:
-        #    images_info = json.load(f)
-        images_info = data
+        with open(UPLOAD_DATA, 'r') as f:
+            images_info = json.load(f)
             
-        # Namuwiki 이미지 업로드 페이지로 이동
+        # 나무위키 이미지 업로드 페이지로 이동
         driver.get("https://namu.wiki/Upload")
         
         for image_info in images_info:
@@ -111,6 +92,7 @@ if __name__ == '__main__':
             # PyAutoGUI를 이용하여 Finder에서 파일 선택
             # 단말마다 좌표가 다르니 적절히 찾을것
             # coordi_check.py 이용하면 현재 마우스 커서의 위치를 알수 있음
+            # 이하는 작성자의 단말에서의 값
             # 폴더 쇼트컷   : 294 489
             # 검색창 클릭   : 920 257
             # 검색 폴더 선택 : 501 302
@@ -119,7 +101,7 @@ if __name__ == '__main__':
             print('click shortcut')
             pyautogui.moveTo(x=294, y=489)
             pyautogui.click()
-            sleep(1)
+            sleep(0.5)
             
             print('search')
             pyautogui.moveTo(x=920, y=257)
@@ -131,20 +113,20 @@ if __name__ == '__main__':
             print('click folder')
             pyautogui.moveTo(x=501, y=302)
             pyautogui.click()
-            sleep(1)
+            sleep(3)
             
             print('click file')
             pyautogui.moveTo(x=430, y=364)
             pyautogui.click()
-            sleep(1)
+            sleep(0.5)
             
             print('click upload')
             pyautogui.moveTo(x=959, y=645)
             pyautogui.click()
-            sleep(1)
+            sleep(0.5)
             
             print('done')
-            sleep(3)
+            sleep(1)
             
             # 업로드명 입력
             upload_name_input = driver.find_element(By.NAME, "document")
@@ -175,7 +157,7 @@ if __name__ == '__main__':
             upload_button.click()
 
             # 업로드 완료 후 대기 (페이지가 전환될 때까지)
-            sleep(10)  # 필요에 따라 대기 시간을 조정하세요.
+            sleep(1)  # 필요에 따라 대기 시간을 조정하세요.
 
             # 새로운 이미지 업로드를 위해 다시 업로드 페이지로 이동
             driver.get("https://namu.wiki/Upload")

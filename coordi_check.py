@@ -1,21 +1,32 @@
 import pyautogui
 import time
 
+import json
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from time import sleep
+from webdriver_manager.chrome import ChromeDriverManager
+
 if __name__ == '__main__':
+    # Chrome for testing 위치 설정
+    options = Options()
+    options.binary_location = 'your CFT location'
+
+    # ChromeDriverManager를 사용하여 ChromeDriver 설치 및 경로 설정
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
+
+    # 나무위키 이미지 업로드 페이지로 이동
+    driver.get("https://namu.wiki/Upload")
+    
+    select_button = driver.find_element(By.XPATH, "//button[text()='Select']")
+    select_button.click()  
+    
     print('start')
     while True:
         x, y = pyautogui.position()
         print(f"X: {x} Y: {y}")
-    
         time.sleep(1.0)
-        
-# 로그인 버튼 누르기
-# 유저버튼      : 1190 279
-# 로그인버튼    : 1034 559
-        
-# 첫 시도  
-# 폴더 쇼트컷   : 294 489
-# 검색창 클릭   : 920 257
-# 검색 폴더 선택 : 501 302
-# 첫결과 선택   : 430 364
-# 열기버튼      : 959 645
